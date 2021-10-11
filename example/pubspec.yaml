@@ -17,3 +17,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+version: 2.0.0+8
