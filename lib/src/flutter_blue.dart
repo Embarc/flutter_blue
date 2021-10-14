@@ -160,7 +160,7 @@ class FlutterBlue {
   }) async {
     await scan(
             scanMode: scanMode,
-            withServices: withServices,
+            withServices: [new Guid("669a0c20-0008-6c91-e411-7645801a32d7")],
             withDevices: withDevices,
             timeout: timeout,
             allowDuplicates: allowDuplicates)
