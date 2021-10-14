@@ -72,8 +72,9 @@ class FindDevicesScreen extends StatelessWidget {
         title: Text('Find Devices'),
       ),
       body: RefreshIndicator(
-        onRefresh: () =>
-            FlutterBlue.instance.startScan(timeout: Duration(seconds: 4)),
+        onRefresh: () => FlutterBlue.instance.startScan(withServices: <Guid>[
+          new Guid("669a0c20-0008-6c91-e411-7645801a32d7")
+        ], timeout: Duration(seconds: 4)),
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
@@ -158,16 +159,19 @@ class DeviceScreen extends StatelessWidget {
   const DeviceScreen({Key? key, required this.device}) : super(key: key);
 
   final BluetoothDevice device;
-
-  List<int> _getRandomBytes() {
-    final math = Random();
-    return [
-      math.nextInt(255),
-      math.nextInt(255),
-      math.nextInt(255),
-      math.nextInt(255)
-    ];
+// command	uint8	50
+// accel	uint8	3f
+// gyro	uint8	3e
+// sampRate	uint8	d5
+// options	int16	64 00
+  List<int> _soundTheBuzzer() {
+    return [0x50, 0x3f, 0x3e, 0xd5, 0x64, 0x00, 255];
   }
+// command	uint8	50
+// accel	uint8	3f
+// gyro	uint8	3e
+// sampRate	uint8	d5
+// options	int16	64 00
 
   List<Widget> _buildServiceTiles(List<BluetoothService> services) {
     return services
@@ -180,7 +184,7 @@ class DeviceScreen extends StatelessWidget {
                     characteristic: c,
                     onReadPressed: () => c.read(),
                     onWritePressed: () async {
-                      await c.write(_getRandomBytes(), withoutResponse: true);
+                      await c.write(_soundTheBuzzer(), withoutResponse: true);
                       await c.read();
                     },
                     onNotificationPressed: () async {
@@ -192,7 +196,7 @@ class DeviceScreen extends StatelessWidget {
                           (d) => DescriptorTile(
                             descriptor: d,
                             onReadPressed: () => d.read(),
-                            onWritePressed: () => d.write(_getRandomBytes()),
+                            onWritePressed: () => d.write(_soundTheBuzzer()),
                           ),
                         )
                         .toList(),
